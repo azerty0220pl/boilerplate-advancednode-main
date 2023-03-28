@@ -22,11 +22,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  res.status(404)
-    .type('text')
-    .send('Not Found');
-});
 
 
 fccTesting(app); //For FCC testing purposes
@@ -46,6 +41,12 @@ myDB(async client => {
       return done(null, user);
     });
   }));
+  
+app.use((req, res, next) => {
+  res.status(404)
+    .type('text')
+    .send('Not Found');
+});
 
   app.route('/').get((req, res) => {
     res.render('index', {
