@@ -19,9 +19,9 @@ module.exports = function (app, myDataBase) {
         res.render('profile', {
           username: req.user.username
         });
-      });
+    });
     
-      app.route('/logout').get((req, res) => {
+    app.route('/logout').get((req, res) => {
         req.logout();
         res.redirect('/');
     });
