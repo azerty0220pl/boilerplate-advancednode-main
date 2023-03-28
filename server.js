@@ -18,8 +18,16 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false }
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
+fccTesting(app); //For FCC testing purposes
+app.use('/public', express.static(process.cwd() + '/public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
@@ -40,20 +48,11 @@ myDB(async client => {
       done(null, doc);
     });
   });
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('index', { title: e, message: 'Unable to connect to database' });
   });
-});
-
-
-fccTesting(app); //For FCC testing purposes
-app.use('/public', express.static(process.cwd() + '/public'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.route('/').get((req, res) => {
-  res.render('index', {title: 'Hello', message: 'Please log in'});
 });
 
 const PORT = process.env.PORT || 3000;
