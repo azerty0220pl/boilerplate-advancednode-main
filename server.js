@@ -22,7 +22,11 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use((req, res, next) => {
+  res.status(404)
+    .type('text')
+    .send('Not Found');
+});
 
 
 fccTesting(app); //For FCC testing purposes
@@ -67,6 +71,11 @@ myDB(async client => {
       username: req.user.username
     });
   });
+
+  app.route('/logout').get((req, res) => {
+    req.logout();
+    res.redirect('/');
+});
 
   passport.serializeUser((user, done) => {
     done(null, user._id);
