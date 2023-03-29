@@ -7,6 +7,8 @@ const myDB = require('./connection');
 const fccTesting = require('./freeCodeCamp/fcctesting.js');
 const routes = require('./routes.js');
 const auth = require('./auth.js');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 const app = express();
 
@@ -32,6 +34,10 @@ app.use(express.urlencoded({ extended: true }));
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   
+  io.on('connection', socket => {
+    console.log('A user has connected');
+  });
+
   routes(app, myDataBase);
   auth(app, myDataBase);
 }).catch(e => {
@@ -41,6 +47,6 @@ myDB(async client => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log('Listening on port ' + PORT);
 });
